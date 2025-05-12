@@ -8,7 +8,7 @@
 #define FLAG_LEAVE   (1 << 0)   // bit 0 = “user wants to quit”
 #define FLAG_LOADED_FILE  (1 << 1)   // bit 1 = “books have been loaded”
 #define STRSIZE 100
-#define FILENAME "HW14Data.txt"
+#define FILENAME "HW15Data.txt"
 #define BINARY_FILENAME "Books.bin"
 #define FLUSH while(getchar() != '\n');
 
@@ -35,6 +35,7 @@ int main(void) {
 
   printf("\n\n|#####################|\n|HW #15, Gabriel Cotua|\n|#####################|\n\n");
 
+  BOOK book;
   NODE * head = NULL;                                   // Node head of Linked LIst
   char userfile[STRSIZE] = FILENAME;                    // File requested by the user
   char bin_userfile[STRSIZE] = BINARY_FILENAME;         // Binary file used
@@ -48,6 +49,7 @@ int main(void) {
 
   // MENU
   while (!(flags & FLAG_LEAVE)) {
+
     if (!(flags & FLAG_LOADED_FILE)) {
       puts( "_________START MENU________\n"
                 "[i] - Get Books Information\n"
@@ -79,7 +81,9 @@ int main(void) {
             head = NULL;
           }
           GettingFileInfo(&head, userfile, &TotalValue);
+          #ifdef DEBUG
           DisplayList(head);
+          #endif
           break;
         }
         if (tolower(ans) == 'n') {
@@ -101,7 +105,6 @@ int main(void) {
         break;
 
       case 'a':
-        BOOK book;
         puts("Enter book title: ");
         fgets(book.Title, STRSIZE, stdin);
         book.Title[strcspn(book.Title, "\n")] = '\0';
@@ -241,7 +244,7 @@ int GettingFileInfo(NODE **node, char *filename, int * TotalLength) {
     AppendNode(node, tempBook);
   }
   *TotalLength = count;
-
+  printf("Done Successfully!\n\n");
   fclose(fp);
   return 0;
 }
@@ -251,7 +254,7 @@ void DisplayList(NODE * head) {
   NODE * tempNode = head; 
    // printf("Opening DisplayListLOOP\n");
   while (tempNode != NULL) {
-    printf("[%d] - BookTitle: %s by [%s] (%d)\n", tempNode->Item.Location, tempNode->Item.Title, tempNode->Item.Author, tempNode->Item.Year);
+    printf("[%d] - Book Title: \"%s\"\n", tempNode->Item.Location, tempNode->Item.Title);
     tempNode = tempNode->Next; 
   }
 }
@@ -362,117 +365,711 @@ int WriteBinary(NODE * head, char * filename) {
   return 0;
 }
 
-
-
 /*
+[Output Example]
+[test file was modified to have more entries]
 
 |#####################|
-|HW #14, Gabriel Cotua|
+|HW #15, Gabriel Cotua|
 |#####################|
 
-____________MENU____________
+_________START MENU________
 [i] - Get Books Information
-[a] - Add Book
-[w] - Write Data to Binary
-[d] - Display Book List
 [q] - Quit
+
 i
+Would you like to gather book information from 'HW15Data.txt'? (y/n) y
+Done Successfully!
 
-Would you like to gather book information from 'HW14Data.txt'? (y/n)y
-
-BookTitle: On Basilisk Station by [Weber, David] (1993)
-BookTitle: The Sum of All Fears by [Clancy, Tom] (1992)
-BookTitle: Battle Born by [Brown, Dale] (1999)
-BookTitle: Between Planets by [Heinlein, Robert A.] (1953)
-BookTitle: Stranger in a Strange Land by [Heinlein, Robert A.] (1959)
-BookTitle: A Soldier's Duty by [Johnson, Jean] (2011)
-BookTitle: Swords Against Wizardry by [Leiber, Fritz] (1968)
-BookTitle: The Mote in God's Eye by [Niven, Larry] (1992)
-BookTitle: Uncharted Stars by [Norton, Andre] (1968)
-BookTitle: Raising Steam by [Pratchett, Terry] (2013)
-BookTitle: Ender's Game by [Card, Orson Scott] (1977)
-BookTitle: Foundation and Empire by [Asimov, Issac] (1951)
-BookTitle: I, Robot by [Asimov, Issac] (1950)
-BookTitle: The Hitchiker's guide to the Universe by [Adams, Douglas] (1979)
-BookTitle: C Primer Plus by [Prata, Stephen] (2014)
 ____________MENU____________
-[i] - Get Books Information
+[i] - Get Book Information From Another File
 [a] - Add Book
 [w] - Write Data to Binary
 [d] - Display Book List
+[b] - Book Information
 [q] - Quit
-a
 
-Enter book title:Stitches
-
-Enter book author:Ito, Junji
-
-Enter book year:2024
-
-Book added successfully!
-____________MENU____________
-[i] - Get Books Information
-[a] - Add Book
-[w] - Write Data to Binary
-[d] - Display Book List
-[q] - Quit
 d
+Books in the list: 
 
-Books in the list:
-BookTitle: On Basilisk Station by [Weber, David] (1993)
-BookTitle: The Sum of All Fears by [Clancy, Tom] (1992)
-BookTitle: Battle Born by [Brown, Dale] (1999)
-BookTitle: Between Planets by [Heinlein, Robert A.] (1953)
-BookTitle: Stranger in a Strange Land by [Heinlein, Robert A.] (1959)
-BookTitle: A Soldier's Duty by [Johnson, Jean] (2011)
-BookTitle: Swords Against Wizardry by [Leiber, Fritz] (1968)
-BookTitle: The Mote in God's Eye by [Niven, Larry] (1992)
-BookTitle: Uncharted Stars by [Norton, Andre] (1968)
-BookTitle: Raising Steam by [Pratchett, Terry] (2013)
-BookTitle: Ender's Game by [Card, Orson Scott] (1977)
-BookTitle: Foundation and Empire by [Asimov, Issac] (1951)
-BookTitle: I, Robot by [Asimov, Issac] (1950)
-BookTitle: The Hitchiker's guide to the Universe by [Adams, Douglas] (1979)
-BookTitle: C Primer Plus by [Prata, Stephen] (2014)
-BookTitle: Stitches by [Ito, Junji] (2024)
+[1] - Book Title: "On Basilisk Station"
+[2] - Book Title: "The Sum of All Fears"
+[3] - Book Title: "Battle Born"
+[4] - Book Title: "Between Planets"
+[5] - Book Title: "Stranger in a Strange Land"
+[6] - Book Title: "A Soldier's Duty"
+[7] - Book Title: "Swords Against Wizardry"
+[8] - Book Title: "The Mote in God's Eye"
+[9] - Book Title: "Uncharted Stars"
+[10] - Book Title: "Raising Steam"
+[11] - Book Title: "Ender's Game"
+[12] - Book Title: "Foundation and Empire"
+[13] - Book Title: "I, Robot"
+[14] - Book Title: "The Hitchiker's guide to the Universe"
+[15] - Book Title: "C Primer Plus"
+[16] - Book Title: "On Basilisk Station"
+[17] - Book Title: "The Sum of All Fears"
+[18] - Book Title: "Battle Born"
+[19] - Book Title: "Between Planets"
+[20] - Book Title: "Stranger in a Strange Land"
+[21] - Book Title: "A Soldier's Duty"
+[22] - Book Title: "Swords Against Wizardry"
+[23] - Book Title: "The Mote in God's Eye"
+[24] - Book Title: "Uncharted Stars"
+[25] - Book Title: "Raising Steam"
+[26] - Book Title: "Ender's Game"
+[27] - Book Title: "Foundation and Empire"
+[28] - Book Title: "I, Robot"
+[29] - Book Title: "The Hitchiker's guide to the Universe"
+[30] - Book Title: "C Primer Plus"
+[31] - Book Title: "On Basilisk Station"
+[32] - Book Title: "The Sum of All Fears"
+[33] - Book Title: "Battle Born"
+[34] - Book Title: "Between Planets"
+[35] - Book Title: "Stranger in a Strange Land"
+[36] - Book Title: "A Soldier's Duty"
+[37] - Book Title: "Swords Against Wizardry"
+[38] - Book Title: "The Mote in God's Eye"
+[39] - Book Title: "Uncharted Stars"
+[40] - Book Title: "Raising Steam"
+[41] - Book Title: "Ender's Game"
+[42] - Book Title: "Foundation and Empire"
+[43] - Book Title: "I, Robot"
+[44] - Book Title: "The Hitchiker's guide to the Universe"
+[45] - Book Title: "C Primer Plus"
+[46] - Book Title: "On Basilisk Station"
+[47] - Book Title: "The Sum of All Fears"
+[48] - Book Title: "Battle Born"
+[49] - Book Title: "Between Planets"
+[50] - Book Title: "Stranger in a Strange Land"
+[51] - Book Title: "A Soldier's Duty"
+[52] - Book Title: "Swords Against Wizardry"
+[53] - Book Title: "The Mote in God's Eye"
+[54] - Book Title: "Uncharted Stars"
+[55] - Book Title: "Raising Steam"
+[56] - Book Title: "Ender's Game"
+[57] - Book Title: "Foundation and Empire"
+[58] - Book Title: "I, Robot"
+[59] - Book Title: "The Hitchiker's guide to the Universe"
+[60] - Book Title: "C Primer Plus"
+[61] - Book Title: "On Basilisk Station"
+[62] - Book Title: "The Sum of All Fears"
+[63] - Book Title: "Battle Born"
+[64] - Book Title: "Between Planets"
+[65] - Book Title: "Stranger in a Strange Land"
+[66] - Book Title: "A Soldier's Duty"
+[67] - Book Title: "Swords Against Wizardry"
+[68] - Book Title: "The Mote in God's Eye"
+[69] - Book Title: "Uncharted Stars"
+[70] - Book Title: "Raising Steam"
+[71] - Book Title: "Ender's Game"
+[72] - Book Title: "Foundation and Empire"
+[73] - Book Title: "I, Robot"
+[74] - Book Title: "The Hitchiker's guide to the Universe"
+[75] - Book Title: "C Primer Plus"
+[76] - Book Title: "On Basilisk Station"
+[77] - Book Title: "The Sum of All Fears"
+[78] - Book Title: "Battle Born"
+[79] - Book Title: "Between Planets"
+[80] - Book Title: "Stranger in a Strange Land"
+[81] - Book Title: "A Soldier's Duty"
+[82] - Book Title: "Swords Against Wizardry"
+[83] - Book Title: "The Mote in God's Eye"
+[84] - Book Title: "Uncharted Stars"
+[85] - Book Title: "Raising Steam"
+[86] - Book Title: "Ender's Game"
+[87] - Book Title: "Foundation and Empire"
+[88] - Book Title: "I, Robot"
+[89] - Book Title: "The Hitchiker's guide to the Universe"
+[90] - Book Title: "C Primer Plus"
+[91] - Book Title: "On Basilisk Station"
+[92] - Book Title: "The Sum of All Fears"
+[93] - Book Title: "Battle Born"
+[94] - Book Title: "Between Planets"
+[95] - Book Title: "Stranger in a Strange Land"
+[96] - Book Title: "A Soldier's Duty"
+[97] - Book Title: "Swords Against Wizardry"
+[98] - Book Title: "The Mote in God's Eye"
+[99] - Book Title: "Uncharted Stars"
+[100] - Book Title: "Raising Steam"
+[101] - Book Title: "Ender's Game"
+[102] - Book Title: "Foundation and Empire"
+[103] - Book Title: "I, Robot"
+[104] - Book Title: "The Hitchiker's guide to the Universe"
+[105] - Book Title: "C Primer Plus"
+[106] - Book Title: "On Basilisk Station"
+[107] - Book Title: "The Sum of All Fears"
+[108] - Book Title: "Battle Born"
+[109] - Book Title: "Between Planets"
+[110] - Book Title: "Stranger in a Strange Land"
+[111] - Book Title: "A Soldier's Duty"
+[112] - Book Title: "Swords Against Wizardry"
+[113] - Book Title: "The Mote in God's Eye"
+[114] - Book Title: "Uncharted Stars"
+[115] - Book Title: "Raising Steam"
+[116] - Book Title: "Ender's Game"
+[117] - Book Title: "Foundation and Empire"
+[118] - Book Title: "I, Robot"
+[119] - Book Title: "The Hitchiker's guide to the Universe"
+[120] - Book Title: "C Primer Plus"
+[121] - Book Title: "On Basilisk Station"
+[122] - Book Title: "The Sum of All Fears"
+[123] - Book Title: "Battle Born"
+[124] - Book Title: "Between Planets"
+[125] - Book Title: "Stranger in a Strange Land"
+[126] - Book Title: "A Soldier's Duty"
+[127] - Book Title: "Swords Against Wizardry"
+[128] - Book Title: "The Mote in God's Eye"
+[129] - Book Title: "Uncharted Stars"
+[130] - Book Title: "Raising Steam"
+[131] - Book Title: "Ender's Game"
+[132] - Book Title: "Foundation and Empire"
+[133] - Book Title: "I, Robot"
+[134] - Book Title: "The Hitchiker's guide to the Universe"
+[135] - Book Title: "C Primer Plus"
+[136] - Book Title: "On Basilisk Station"
+[137] - Book Title: "The Sum of All Fears"
+[138] - Book Title: "Battle Born"
+[139] - Book Title: "Between Planets"
+[140] - Book Title: "Stranger in a Strange Land"
+[141] - Book Title: "A Soldier's Duty"
+[142] - Book Title: "Swords Against Wizardry"
+[143] - Book Title: "The Mote in God's Eye"
+[144] - Book Title: "Uncharted Stars"
+[145] - Book Title: "Raising Steam"
+[146] - Book Title: "Ender's Game"
+[147] - Book Title: "Foundation and Empire"
+[148] - Book Title: "I, Robot"
+[149] - Book Title: "The Hitchiker's guide to the Universe"
+[150] - Book Title: "C Primer Plus"
+[151] - Book Title: "On Basilisk Station"
+[152] - Book Title: "The Sum of All Fears"
+[153] - Book Title: "Battle Born"
+[154] - Book Title: "Between Planets"
+[155] - Book Title: "Stranger in a Strange Land"
+[156] - Book Title: "A Soldier's Duty"
+[157] - Book Title: "Swords Against Wizardry"
+[158] - Book Title: "The Mote in God's Eye"
+[159] - Book Title: "Uncharted Stars"
+[160] - Book Title: "Raising Steam"
+[161] - Book Title: "Ender's Game"
+[162] - Book Title: "Foundation and Empire"
+[163] - Book Title: "I, Robot"
+[164] - Book Title: "The Hitchiker's guide to the Universe"
+[165] - Book Title: "C Primer Plus"
+[166] - Book Title: "On Basilisk Station"
+[167] - Book Title: "The Sum of All Fears"
+[168] - Book Title: "Battle Born"
+[169] - Book Title: "Between Planets"
+[170] - Book Title: "Stranger in a Strange Land"
+[171] - Book Title: "A Soldier's Duty"
+[172] - Book Title: "Swords Against Wizardry"
+[173] - Book Title: "The Mote in God's Eye"
+[174] - Book Title: "Uncharted Stars"
+[175] - Book Title: "Raising Steam"
+[176] - Book Title: "Ender's Game"
+[177] - Book Title: "Foundation and Empire"
+[178] - Book Title: "I, Robot"
+[179] - Book Title: "The Hitchiker's guide to the Universe"
+[180] - Book Title: "C Primer Plus"
+[181] - Book Title: "On Basilisk Station"
+[182] - Book Title: "The Sum of All Fears"
+[183] - Book Title: "Battle Born"
+[184] - Book Title: "Between Planets"
+[185] - Book Title: "Stranger in a Strange Land"
+[186] - Book Title: "A Soldier's Duty"
+[187] - Book Title: "Swords Against Wizardry"
+[188] - Book Title: "The Mote in God's Eye"
+[189] - Book Title: "Uncharted Stars"
+[190] - Book Title: "Raising Steam"
+[191] - Book Title: "Ender's Game"
+[192] - Book Title: "Foundation and Empire"
+[193] - Book Title: "I, Robot"
+[194] - Book Title: "The Hitchiker's guide to the Universe"
+[195] - Book Title: "C Primer Plus"
+[196] - Book Title: "On Basilisk Station"
+[197] - Book Title: "The Sum of All Fears"
+[198] - Book Title: "Battle Born"
+[199] - Book Title: "Between Planets"
+[200] - Book Title: "Stranger in a Strange Land"
+[201] - Book Title: "A Soldier's Duty"
+[202] - Book Title: "Swords Against Wizardry"
+[203] - Book Title: "The Mote in God's Eye"
+[204] - Book Title: "Uncharted Stars"
+[205] - Book Title: "Raising Steam"
+[206] - Book Title: "Ender's Game"
+[207] - Book Title: "Foundation and Empire"
+[208] - Book Title: "I, Robot"
+[209] - Book Title: "The Hitchiker's guide to the Universe"
+[210] - Book Title: "C Primer Plus"
+[211] - Book Title: "On Basilisk Station"
+[212] - Book Title: "The Sum of All Fears"
+[213] - Book Title: "Battle Born"
+[214] - Book Title: "Between Planets"
+[215] - Book Title: "Stranger in a Strange Land"
+[216] - Book Title: "A Soldier's Duty"
+[217] - Book Title: "Swords Against Wizardry"
+[218] - Book Title: "The Mote in God's Eye"
+[219] - Book Title: "Uncharted Stars"
+[220] - Book Title: "Raising Steam"
+[221] - Book Title: "Ender's Game"
+[222] - Book Title: "Foundation and Empire"
+[223] - Book Title: "I, Robot"
+[224] - Book Title: "The Hitchiker's guide to the Universe"
+[225] - Book Title: "C Primer Plus"
+[226] - Book Title: "On Basilisk Station"
+[227] - Book Title: "The Sum of All Fears"
+[228] - Book Title: "Battle Born"
+[229] - Book Title: "Between Planets"
+[230] - Book Title: "Stranger in a Strange Land"
+[231] - Book Title: "A Soldier's Duty"
+[232] - Book Title: "Swords Against Wizardry"
+[233] - Book Title: "The Mote in God's Eye"
+[234] - Book Title: "Uncharted Stars"
+[235] - Book Title: "Raising Steam"
+[236] - Book Title: "Ender's Game"
+[237] - Book Title: "Foundation and Empire"
+[238] - Book Title: "I, Robot"
+[239] - Book Title: "The Hitchiker's guide to the Universe"
+[240] - Book Title: "C Primer Plus"
+[241] - Book Title: "On Basilisk Station"
+[242] - Book Title: "The Sum of All Fears"
+[243] - Book Title: "Battle Born"
+[244] - Book Title: "Between Planets"
+[245] - Book Title: "Stranger in a Strange Land"
+[246] - Book Title: "A Soldier's Duty"
+[247] - Book Title: "Swords Against Wizardry"
+[248] - Book Title: "The Mote in God's Eye"
+[249] - Book Title: "Uncharted Stars"
+[250] - Book Title: "Raising Steam"
+[251] - Book Title: "Ender's Game"
+[252] - Book Title: "Foundation and Empire"
+[253] - Book Title: "I, Robot"
+[254] - Book Title: "The Hitchiker's guide to the Universe"
+[255] - Book Title: "C Primer Plus"
+[256] - Book Title: "On Basilisk Station"
+[257] - Book Title: "The Sum of All Fears"
+[258] - Book Title: "Battle Born"
+[259] - Book Title: "Between Planets"
+[260] - Book Title: "Stranger in a Strange Land"
+[261] - Book Title: "A Soldier's Duty"
+[262] - Book Title: "Swords Against Wizardry"
+[263] - Book Title: "The Mote in God's Eye"
+[264] - Book Title: "Uncharted Stars"
+[265] - Book Title: "Raising Steam"
+[266] - Book Title: "Ender's Game"
+[267] - Book Title: "Foundation and Empire"
+[268] - Book Title: "I, Robot"
+[269] - Book Title: "The Hitchiker's guide to the Universe"
+[270] - Book Title: "C Primer Plus"
+[271] - Book Title: "On Basilisk Station"
+[272] - Book Title: "The Sum of All Fears"
+[273] - Book Title: "Battle Born"
+[274] - Book Title: "Between Planets"
+[275] - Book Title: "Stranger in a Strange Land"
+[276] - Book Title: "A Soldier's Duty"
+[277] - Book Title: "Swords Against Wizardry"
+[278] - Book Title: "The Mote in God's Eye"
+[279] - Book Title: "Uncharted Stars"
+[280] - Book Title: "Raising Steam"
+[281] - Book Title: "Ender's Game"
+[282] - Book Title: "Foundation and Empire"
+[283] - Book Title: "I, Robot"
+[284] - Book Title: "The Hitchiker's guide to the Universe"
+[285] - Book Title: "C Primer Plus"
+[286] - Book Title: "On Basilisk Station"
+[287] - Book Title: "The Sum of All Fears"
+[288] - Book Title: "Battle Born"
+[289] - Book Title: "Between Planets"
+[290] - Book Title: "Stranger in a Strange Land"
+[291] - Book Title: "A Soldier's Duty"
+[292] - Book Title: "Swords Against Wizardry"
+[293] - Book Title: "The Mote in God's Eye"
+[294] - Book Title: "Uncharted Stars"
+[295] - Book Title: "Raising Steam"
+[296] - Book Title: "Ender's Game"
+[297] - Book Title: "Foundation and Empire"
+[298] - Book Title: "I, Robot"
+[299] - Book Title: "The Hitchiker's guide to the Universe"
+[300] - Book Title: "C Primer Plus"
 ____________MENU____________
-[i] - Get Books Information
+[i] - Get Book Information From Another File
 [a] - Add Book
 [w] - Write Data to Binary
 [d] - Display Book List
+[b] - Book Information
 [q] - Quit
-w
 
-Would you like to write information to Books.bin? (y/n)y
+b
+Insert book location for information (1 - 300): 20
+[20] - BookTitle: Stranger in a Strange Land by [Heinlein, Robert A.] (1959)
 
-File already exists. Overwrite Books.bin? (y/n):y
+Would you like to continue? (y/n)
 
-Writing book: On Basilisk Station by Weber, David (1993)
-Writing book: The Sum of All Fears by Clancy, Tom (1992)
-Writing book: Battle Born by Brown, Dale (1999)
-Writing book: Between Planets by Heinlein, Robert A. (1953)
-Writing book: Stranger in a Strange Land by Heinlein, Robert A. (1959)
-Writing book: A Soldier's Duty by Johnson, Jean (2011)
-Writing book: Swords Against Wizardry by Leiber, Fritz (1968)
-Writing book: The Mote in God's Eye by Niven, Larry (1992)
-Writing book: Uncharted Stars by Norton, Andre (1968)
-Writing book: Raising Steam by Pratchett, Terry (2013)
-Writing book: Ender's Game by Card, Orson Scott (1977)
-Writing book: Foundation and Empire by Asimov, Issac (1951)
-Writing book: I, Robot by Asimov, Issac (1950)
-Writing book: The Hitchiker's guide to the Universe by Adams, Douglas (1979)
-Writing book: C Primer Plus by Prata, Stephen (2014)
-Writing book: Stitches by Ito, Junji (2024)
-Successfully wrote 16 book(s) to Books.bin
+y
+Insert book location for information (1 - 300): 200
+[200] - BookTitle: Stranger in a Strange Land by [Heinlein, Robert A.] (1959)      
+
+Would you like to continue? (y/n)
+
+n
 ____________MENU____________
-[i] - Get Books Information
+[i] - Get Book Information From Another File
 [a] - Add Book
 [w] - Write Data to Binary
 [d] - Display Book List
+[b] - Book Information
 [q] - Quit
+
+a
+Enter book title: 
+Nice Book
+Enter book author: 
+Yo
+Enter book year: 
+2025
+Book added successfully!
+
+____________MENU____________
+[i] - Get Book Information From Another File
+[a] - Add Book
+[w] - Write Data to Binary
+[d] - Display Book List
+[b] - Book Information
+[q] - Quit
+
+d
+Books in the list: 
+
+[1] - Book Title: "On Basilisk Station"
+[2] - Book Title: "The Sum of All Fears"
+[3] - Book Title: "Battle Born"
+[4] - Book Title: "Between Planets"
+[5] - Book Title: "Stranger in a Strange Land"
+[6] - Book Title: "A Soldier's Duty"
+[7] - Book Title: "Swords Against Wizardry"
+[8] - Book Title: "The Mote in God's Eye"
+[9] - Book Title: "Uncharted Stars"
+[10] - Book Title: "Raising Steam"
+[11] - Book Title: "Ender's Game"
+[12] - Book Title: "Foundation and Empire"
+[13] - Book Title: "I, Robot"
+[14] - Book Title: "The Hitchiker's guide to the Universe"
+[15] - Book Title: "C Primer Plus"
+[16] - Book Title: "On Basilisk Station"
+[17] - Book Title: "The Sum of All Fears"
+[18] - Book Title: "Battle Born"
+[19] - Book Title: "Between Planets"
+[20] - Book Title: "Stranger in a Strange Land"
+[21] - Book Title: "A Soldier's Duty"
+[22] - Book Title: "Swords Against Wizardry"
+[23] - Book Title: "The Mote in God's Eye"
+[24] - Book Title: "Uncharted Stars"
+[25] - Book Title: "Raising Steam"
+[26] - Book Title: "Ender's Game"
+[27] - Book Title: "Foundation and Empire"
+[28] - Book Title: "I, Robot"
+[29] - Book Title: "The Hitchiker's guide to the Universe"
+[30] - Book Title: "C Primer Plus"
+[31] - Book Title: "On Basilisk Station"
+[32] - Book Title: "The Sum of All Fears"
+[33] - Book Title: "Battle Born"
+[34] - Book Title: "Between Planets"
+[35] - Book Title: "Stranger in a Strange Land"
+[36] - Book Title: "A Soldier's Duty"
+[37] - Book Title: "Swords Against Wizardry"
+[38] - Book Title: "The Mote in God's Eye"
+[39] - Book Title: "Uncharted Stars"
+[40] - Book Title: "Raising Steam"
+[41] - Book Title: "Ender's Game"
+[42] - Book Title: "Foundation and Empire"
+[43] - Book Title: "I, Robot"
+[44] - Book Title: "The Hitchiker's guide to the Universe"
+[45] - Book Title: "C Primer Plus"
+[46] - Book Title: "On Basilisk Station"
+[47] - Book Title: "The Sum of All Fears"
+[48] - Book Title: "Battle Born"
+[49] - Book Title: "Between Planets"
+[50] - Book Title: "Stranger in a Strange Land"
+[51] - Book Title: "A Soldier's Duty"
+[52] - Book Title: "Swords Against Wizardry"
+[53] - Book Title: "The Mote in God's Eye"
+[54] - Book Title: "Uncharted Stars"
+[55] - Book Title: "Raising Steam"
+[56] - Book Title: "Ender's Game"
+[57] - Book Title: "Foundation and Empire"
+[58] - Book Title: "I, Robot"
+[59] - Book Title: "The Hitchiker's guide to the Universe"
+[60] - Book Title: "C Primer Plus"
+[61] - Book Title: "On Basilisk Station"
+[62] - Book Title: "The Sum of All Fears"
+[63] - Book Title: "Battle Born"
+[64] - Book Title: "Between Planets"
+[65] - Book Title: "Stranger in a Strange Land"
+[66] - Book Title: "A Soldier's Duty"
+[67] - Book Title: "Swords Against Wizardry"
+[68] - Book Title: "The Mote in God's Eye"
+[69] - Book Title: "Uncharted Stars"
+[70] - Book Title: "Raising Steam"
+[71] - Book Title: "Ender's Game"
+[72] - Book Title: "Foundation and Empire"
+[73] - Book Title: "I, Robot"
+[74] - Book Title: "The Hitchiker's guide to the Universe"
+[75] - Book Title: "C Primer Plus"
+[76] - Book Title: "On Basilisk Station"
+[77] - Book Title: "The Sum of All Fears"
+[78] - Book Title: "Battle Born"
+[79] - Book Title: "Between Planets"
+[80] - Book Title: "Stranger in a Strange Land"
+[81] - Book Title: "A Soldier's Duty"
+[82] - Book Title: "Swords Against Wizardry"
+[83] - Book Title: "The Mote in God's Eye"
+[84] - Book Title: "Uncharted Stars"
+[85] - Book Title: "Raising Steam"
+[86] - Book Title: "Ender's Game"
+[87] - Book Title: "Foundation and Empire"
+[88] - Book Title: "I, Robot"
+[89] - Book Title: "The Hitchiker's guide to the Universe"
+[90] - Book Title: "C Primer Plus"
+[91] - Book Title: "On Basilisk Station"
+[92] - Book Title: "The Sum of All Fears"
+[93] - Book Title: "Battle Born"
+[94] - Book Title: "Between Planets"
+[95] - Book Title: "Stranger in a Strange Land"
+[96] - Book Title: "A Soldier's Duty"
+[97] - Book Title: "Swords Against Wizardry"
+[98] - Book Title: "The Mote in God's Eye"
+[99] - Book Title: "Uncharted Stars"
+[100] - Book Title: "Raising Steam"
+[101] - Book Title: "Ender's Game"
+[102] - Book Title: "Foundation and Empire"
+[103] - Book Title: "I, Robot"
+[104] - Book Title: "The Hitchiker's guide to the Universe"
+[105] - Book Title: "C Primer Plus"
+[106] - Book Title: "On Basilisk Station"
+[107] - Book Title: "The Sum of All Fears"
+[108] - Book Title: "Battle Born"
+[109] - Book Title: "Between Planets"
+[110] - Book Title: "Stranger in a Strange Land"
+[111] - Book Title: "A Soldier's Duty"
+[112] - Book Title: "Swords Against Wizardry"
+[113] - Book Title: "The Mote in God's Eye"
+[114] - Book Title: "Uncharted Stars"
+[115] - Book Title: "Raising Steam"
+[116] - Book Title: "Ender's Game"
+[117] - Book Title: "Foundation and Empire"
+[118] - Book Title: "I, Robot"
+[119] - Book Title: "The Hitchiker's guide to the Universe"
+[120] - Book Title: "C Primer Plus"
+[121] - Book Title: "On Basilisk Station"
+[122] - Book Title: "The Sum of All Fears"
+[123] - Book Title: "Battle Born"
+[124] - Book Title: "Between Planets"
+[125] - Book Title: "Stranger in a Strange Land"
+[126] - Book Title: "A Soldier's Duty"
+[127] - Book Title: "Swords Against Wizardry"
+[128] - Book Title: "The Mote in God's Eye"
+[129] - Book Title: "Uncharted Stars"
+[130] - Book Title: "Raising Steam"
+[131] - Book Title: "Ender's Game"
+[132] - Book Title: "Foundation and Empire"
+[133] - Book Title: "I, Robot"
+[134] - Book Title: "The Hitchiker's guide to the Universe"
+[135] - Book Title: "C Primer Plus"
+[136] - Book Title: "On Basilisk Station"
+[137] - Book Title: "The Sum of All Fears"
+[138] - Book Title: "Battle Born"
+[139] - Book Title: "Between Planets"
+[140] - Book Title: "Stranger in a Strange Land"
+[141] - Book Title: "A Soldier's Duty"
+[142] - Book Title: "Swords Against Wizardry"
+[143] - Book Title: "The Mote in God's Eye"
+[144] - Book Title: "Uncharted Stars"
+[145] - Book Title: "Raising Steam"
+[146] - Book Title: "Ender's Game"
+[147] - Book Title: "Foundation and Empire"
+[148] - Book Title: "I, Robot"
+[149] - Book Title: "The Hitchiker's guide to the Universe"
+[150] - Book Title: "C Primer Plus"
+[151] - Book Title: "On Basilisk Station"
+[152] - Book Title: "The Sum of All Fears"
+[153] - Book Title: "Battle Born"
+[154] - Book Title: "Between Planets"
+[155] - Book Title: "Stranger in a Strange Land"
+[156] - Book Title: "A Soldier's Duty"
+[157] - Book Title: "Swords Against Wizardry"
+[158] - Book Title: "The Mote in God's Eye"
+[159] - Book Title: "Uncharted Stars"
+[160] - Book Title: "Raising Steam"
+[161] - Book Title: "Ender's Game"
+[162] - Book Title: "Foundation and Empire"
+[163] - Book Title: "I, Robot"
+[164] - Book Title: "The Hitchiker's guide to the Universe"
+[165] - Book Title: "C Primer Plus"
+[166] - Book Title: "On Basilisk Station"
+[167] - Book Title: "The Sum of All Fears"
+[168] - Book Title: "Battle Born"
+[169] - Book Title: "Between Planets"
+[170] - Book Title: "Stranger in a Strange Land"
+[171] - Book Title: "A Soldier's Duty"
+[172] - Book Title: "Swords Against Wizardry"
+[173] - Book Title: "The Mote in God's Eye"
+[174] - Book Title: "Uncharted Stars"
+[175] - Book Title: "Raising Steam"
+[176] - Book Title: "Ender's Game"
+[177] - Book Title: "Foundation and Empire"
+[178] - Book Title: "I, Robot"
+[179] - Book Title: "The Hitchiker's guide to the Universe"
+[180] - Book Title: "C Primer Plus"
+[181] - Book Title: "On Basilisk Station"
+[182] - Book Title: "The Sum of All Fears"
+[183] - Book Title: "Battle Born"
+[184] - Book Title: "Between Planets"
+[185] - Book Title: "Stranger in a Strange Land"
+[186] - Book Title: "A Soldier's Duty"
+[187] - Book Title: "Swords Against Wizardry"
+[188] - Book Title: "The Mote in God's Eye"
+[189] - Book Title: "Uncharted Stars"
+[190] - Book Title: "Raising Steam"
+[191] - Book Title: "Ender's Game"
+[192] - Book Title: "Foundation and Empire"
+[193] - Book Title: "I, Robot"
+[194] - Book Title: "The Hitchiker's guide to the Universe"
+[195] - Book Title: "C Primer Plus"
+[196] - Book Title: "On Basilisk Station"
+[197] - Book Title: "The Sum of All Fears"
+[198] - Book Title: "Battle Born"
+[199] - Book Title: "Between Planets"
+[200] - Book Title: "Stranger in a Strange Land"
+[201] - Book Title: "A Soldier's Duty"
+[202] - Book Title: "Swords Against Wizardry"
+[203] - Book Title: "The Mote in God's Eye"
+[204] - Book Title: "Uncharted Stars"
+[205] - Book Title: "Raising Steam"
+[206] - Book Title: "Ender's Game"
+[207] - Book Title: "Foundation and Empire"
+[208] - Book Title: "I, Robot"
+[209] - Book Title: "The Hitchiker's guide to the Universe"
+[210] - Book Title: "C Primer Plus"
+[211] - Book Title: "On Basilisk Station"
+[212] - Book Title: "The Sum of All Fears"
+[213] - Book Title: "Battle Born"
+[214] - Book Title: "Between Planets"
+[215] - Book Title: "Stranger in a Strange Land"
+[216] - Book Title: "A Soldier's Duty"
+[217] - Book Title: "Swords Against Wizardry"
+[218] - Book Title: "The Mote in God's Eye"
+[219] - Book Title: "Uncharted Stars"
+[220] - Book Title: "Raising Steam"
+[221] - Book Title: "Ender's Game"
+[222] - Book Title: "Foundation and Empire"
+[223] - Book Title: "I, Robot"
+[224] - Book Title: "The Hitchiker's guide to the Universe"
+[225] - Book Title: "C Primer Plus"
+[226] - Book Title: "On Basilisk Station"
+[227] - Book Title: "The Sum of All Fears"
+[228] - Book Title: "Battle Born"
+[229] - Book Title: "Between Planets"
+[230] - Book Title: "Stranger in a Strange Land"
+[231] - Book Title: "A Soldier's Duty"
+[232] - Book Title: "Swords Against Wizardry"
+[233] - Book Title: "The Mote in God's Eye"
+[234] - Book Title: "Uncharted Stars"
+[235] - Book Title: "Raising Steam"
+[236] - Book Title: "Ender's Game"
+[237] - Book Title: "Foundation and Empire"
+[238] - Book Title: "I, Robot"
+[239] - Book Title: "The Hitchiker's guide to the Universe"
+[240] - Book Title: "C Primer Plus"
+[241] - Book Title: "On Basilisk Station"
+[242] - Book Title: "The Sum of All Fears"
+[243] - Book Title: "Battle Born"
+[244] - Book Title: "Between Planets"
+[245] - Book Title: "Stranger in a Strange Land"
+[246] - Book Title: "A Soldier's Duty"
+[247] - Book Title: "Swords Against Wizardry"
+[248] - Book Title: "The Mote in God's Eye"
+[249] - Book Title: "Uncharted Stars"
+[250] - Book Title: "Raising Steam"
+[251] - Book Title: "Ender's Game"
+[252] - Book Title: "Foundation and Empire"
+[253] - Book Title: "I, Robot"
+[254] - Book Title: "The Hitchiker's guide to the Universe"
+[255] - Book Title: "C Primer Plus"
+[256] - Book Title: "On Basilisk Station"
+[257] - Book Title: "The Sum of All Fears"
+[258] - Book Title: "Battle Born"
+[259] - Book Title: "Between Planets"
+[260] - Book Title: "Stranger in a Strange Land"
+[261] - Book Title: "A Soldier's Duty"
+[262] - Book Title: "Swords Against Wizardry"
+[263] - Book Title: "The Mote in God's Eye"
+[264] - Book Title: "Uncharted Stars"
+[265] - Book Title: "Raising Steam"
+[266] - Book Title: "Ender's Game"
+[267] - Book Title: "Foundation and Empire"
+[268] - Book Title: "I, Robot"
+[269] - Book Title: "The Hitchiker's guide to the Universe"
+[270] - Book Title: "C Primer Plus"
+[271] - Book Title: "On Basilisk Station"
+[272] - Book Title: "The Sum of All Fears"
+[273] - Book Title: "Battle Born"
+[274] - Book Title: "Between Planets"
+[275] - Book Title: "Stranger in a Strange Land"
+[276] - Book Title: "A Soldier's Duty"
+[277] - Book Title: "Swords Against Wizardry"
+[278] - Book Title: "The Mote in God's Eye"
+[279] - Book Title: "Uncharted Stars"
+[280] - Book Title: "Raising Steam"
+[281] - Book Title: "Ender's Game"
+[282] - Book Title: "Foundation and Empire"
+[283] - Book Title: "I, Robot"
+[284] - Book Title: "The Hitchiker's guide to the Universe"
+[285] - Book Title: "C Primer Plus"
+[286] - Book Title: "On Basilisk Station"
+[287] - Book Title: "The Sum of All Fears"
+[288] - Book Title: "Battle Born"
+[289] - Book Title: "Between Planets"
+[290] - Book Title: "Stranger in a Strange Land"
+[291] - Book Title: "A Soldier's Duty"
+[292] - Book Title: "Swords Against Wizardry"
+[293] - Book Title: "The Mote in God's Eye"
+[294] - Book Title: "Uncharted Stars"
+[295] - Book Title: "Raising Steam"
+[296] - Book Title: "Ender's Game"
+[297] - Book Title: "Foundation and Empire"
+[298] - Book Title: "I, Robot"
+[299] - Book Title: "The Hitchiker's guide to the Universe"
+[300] - Book Title: "C Primer Plus"
+[301] - Book Title: "Nice Book"
+____________MENU____________
+[i] - Get Book Information From Another File
+[a] - Add Book
+[w] - Write Data to Binary
+[d] - Display Book List
+[b] - Book Information
+[q] - Quit
+
+b
+Insert book location for information (1 - 301): 301]
+[301] - BookTitle: Nice Book by [Yo] (2025)
+
+Would you like to continue? (y/n)
+
+y
+Insert book location for information (1 - 301): 301
+[301] - BookTitle: Nice Book by [Yo] (2025)
+
+Would you like to continue? (y/n)
+
+n
+____________MENU____________
+[i] - Get Book Information From Another File
+[a] - Add Book
+[w] - Write Data to Binary
+[d] - Display Book List
+[b] - Book Information
+[q] - Quit
+
 q
-
-
-Process finished with exit code 0
-
- */
+*/
